@@ -57,7 +57,18 @@ public class GameScreen implements Screen
 		player = EntityFactory.makePlayer();
 		engine.addEntity(player);
 
-		engine.addEntity(EntityFactory.makeEnemy());
+		Entity levelScript = new Entity();
+		ScriptComponent sc = new ScriptComponent();
+		sc.script = new ScriptComponent.Script()
+		{
+			@Override
+			public void perform(Entity e, int scriptTime)
+			{
+				if (scriptTime % 120 == 0) engine.addEntity(EntityFactory.makeEnemy());
+			}
+		};
+		levelScript.add(sc);
+		engine.addEntity(levelScript);
 	}
 
 	@Override
@@ -72,6 +83,10 @@ public class GameScreen implements Screen
 		if (Gdx.input.isKeyJustPressed(Input.Keys.S))
 		{
 			engine.addEntity(EntityFactory.makeEnemy());
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.D))
+		{
+			engine.addEntity(EntityFactory.makePlayer());
 		}
 
 		gameMain.batch.setProjectionMatrix(cam.combined);

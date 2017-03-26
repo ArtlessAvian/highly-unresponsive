@@ -57,7 +57,7 @@ public class PhysicsSystem extends IntervalIteratingSystem
 			{
 				pc.despawn++;
 			}
-			if (pc.despawn > 3)
+			if (pc.despawn > 120)
 			{
 				toRemove.add(entity);
 			}

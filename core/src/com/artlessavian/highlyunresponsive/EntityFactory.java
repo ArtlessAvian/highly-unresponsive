@@ -1,12 +1,10 @@
 package com.artlessavian.highlyunresponsive;
 
 
-import com.artlessavian.highlyunresponsive.ecsstuff.HurtboxComponent;
-import com.artlessavian.highlyunresponsive.ecsstuff.PhysicsComponent;
-import com.artlessavian.highlyunresponsive.ecsstuff.ShootyComponent;
-import com.artlessavian.highlyunresponsive.ecsstuff.SpriteComponent;
+import com.artlessavian.highlyunresponsive.ecsstuff.*;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -42,7 +40,7 @@ public class EntityFactory
 
 		PhysicsComponent pc = new PhysicsComponent();
 		pc.pos.set(source);
-		pc.vel.y = 300;
+		pc.vel.y = 700;
 		pc.radius = 10;
 		pc.isFriendly = isFriendly;
 		pc.damage = 1;
@@ -71,28 +69,52 @@ public class EntityFactory
 //		sc.sprite.setColor(Color.GREEN);
 		e.add(sc);
 		HurtboxComponent hc = new HurtboxComponent(false);
-		hc.health = 300;
+		hc.health = 70;
 		e.add(hc);
 
 		ShootyComponent shootC = new ShootyComponent();
-		shootC.pattern = new ShootyComponent.BulletPattern()
-		{
-			@Override
-			public void createBullets(HashSet<Entity> toAdd, Entity e)
-			{
-				if (Gdx.graphics.getFrameId() % 3 == 0)
-				{
-					toAdd.add(EntityFactory.makeBulletTracking(false, pc.pos, player.getComponent(PhysicsComponent.class).pos));
-				}
-			}
-		};
-		//e.add(shootC);
 
-//		ScriptComponent scriptC = new ScriptComponent();
-//		float[] xs = {0, 0, 0, 0, 0, 0};
-//		float[] ys = {0, 100, 100, 0, 0, 0};
-//		scriptC.script = new ScriptComponent.ScriptFollowPath(xs, ys);
-//		e.add(scriptC);
+		switch ((int)(Math.random() * 2))
+		{
+			case 0: {shootC.pattern = new ShootyComponent.BulletPattern()
+			{
+				@Override
+				public void createBullets(HashSet<Entity> toAdd, Entity e)
+				{
+						if (Gdx.graphics.getFrameId() % 30 == 0)
+						{
+							toAdd.add(fuzzDir(addColor(makeBulletTracking(false, pc.pos, player.getComponent(PhysicsComponent.class).pos), Color.GOLDENROD)));
+						}
+						}
+				}; break;}
+			case 1: {shootC.pattern = new ShootyComponent.BulletPattern()
+			{
+				@Override
+				public void createBullets(HashSet<Entity> toAdd, Entity e)
+				{
+					if (Gdx.graphics.getFrameId() % 120 == 0)
+					{
+						for (int i = 0; i < 36; i++)
+						{
+							Entity butts = EntityFactory.makeBullet(false, pc.pos);
+							PhysicsComponent pc = butts.getComponent(PhysicsComponent.class);
+							pc.vel.set(0, -60);
+							pc.vel.setAngle(i * 10);
+							toAdd.add(addColor(butts,Color.GREEN));
+						}
+					}
+				}
+			}; break;}
+		}
+
+
+		e.add(shootC);
+
+		ScriptComponent scriptC = new ScriptComponent();
+		float[] xs = {(float)Math.random() * 400 - 200};
+		float[] ys = {900, 700, 600, 550};
+		scriptC.script = new ScriptComponent.ScriptFollowPath(xs, ys);
+		e.add(scriptC);
 
 		return e;
 	}
@@ -105,7 +127,7 @@ public class EntityFactory
 
 		final PhysicsComponent pc = new PhysicsComponent();
 		pc.playerStrength = 400;
-		pc.radius = 10;
+		pc.radius = 2;
 		pc.isPlayer = true;
 		pc.isFriendly = true;
 		e.add(pc);
@@ -128,7 +150,7 @@ public class EntityFactory
 //				}
 				if (Gdx.graphics.getFrameId() % 1 == 0)
 				{
-					toAdd.add(EntityFactory.makeBullet(true, pc.pos));
+					toAdd.add(addColor(fuzzDir(makeBullet(true, pc.pos)),Color.BLUE));
 				}
 			}
 		};
@@ -137,5 +159,19 @@ public class EntityFactory
 
 		player = e;
 		return e;
+	}
+
+	private static Entity fuzzDir(Entity entity)
+	{
+		PhysicsComponent pc = entity.getComponent(PhysicsComponent.class);
+		pc.vel.setAngle((float)(pc.vel.angle() + Math.random() * 20 - 10));
+		return entity;
+	}
+
+	private static Entity addColor(Entity entity, Color c)
+	{
+		SpriteComponent sc = entity.getComponent(SpriteComponent.class);
+		sc.sprite.setColor(c);
+		return entity;
 	}
 }

@@ -24,7 +24,7 @@ public class MenuScreen implements Screen
 	{
 		if (Gdx.input.isKeyPressed(Input.Keys.Z))
 		{
-			System.out.println("hi");
+//			System.out.println("hi");
 			gameMain.setScreen(new GameScreen(gameMain));
 		}
 
