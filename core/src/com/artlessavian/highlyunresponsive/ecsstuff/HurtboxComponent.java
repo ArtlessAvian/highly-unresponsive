@@ -4,10 +4,12 @@ import com.badlogic.ashley.core.Component;
 
 public class HurtboxComponent implements Component
 {
+	int maxHealth = 1;
 	int health = 1;
+	boolean isBoss;
 	boolean isFriendly;
 
-	HurtboxComponent(boolean isFriendly)
+	public HurtboxComponent(boolean isFriendly)
 	{
 		this.isFriendly = isFriendly;
 	}

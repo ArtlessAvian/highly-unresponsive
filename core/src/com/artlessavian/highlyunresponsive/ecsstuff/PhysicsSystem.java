@@ -5,17 +5,21 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IntervalIteratingSystem;
 import com.badlogic.gdx.math.Rectangle;
 
+import java.util.HashSet;
+
 public class PhysicsSystem extends IntervalIteratingSystem
 {
 	float interval;
 	private Rectangle gameBounds;
+	private HashSet<Entity> toRemove;
 
-	public PhysicsSystem(float interval, Rectangle gameBounds)
+	public PhysicsSystem(float interval, Rectangle gameBounds, HashSet<Entity> toRemove)
 	{
 		super(Family.all(PhysicsComponent.class).get(), interval);
 		this.interval = interval;
 
 		this.gameBounds = gameBounds;
+		this.toRemove = toRemove;
 	}
 
 	@Override
@@ -45,6 +49,17 @@ public class PhysicsSystem extends IntervalIteratingSystem
 			if (pc.pos.y + pc.radius > gameBounds.y + gameBounds.height)
 			{
 				pc.pos.y = gameBounds.y + gameBounds.height - pc.radius;
+			}
+		}
+		else
+		{
+			if (gameBounds.contains(pc.pos))
+			{
+				pc.despawn++;
+			}
+			if (pc.despawn > 300)
+			{
+				toRemove.add(entity);
 			}
 		}
 

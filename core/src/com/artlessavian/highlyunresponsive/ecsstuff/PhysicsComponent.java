@@ -13,7 +13,9 @@ public class PhysicsComponent implements Component
 	public Vector2 playerVel;
 	public int playerStrength = 0;
 	public QuadTree quadtreePos;
-	boolean hasCollided;
+	public boolean hasCollided;
+	public boolean isFriendly;
+	public int despawn = 0;
 
 	public PhysicsComponent()
 	{

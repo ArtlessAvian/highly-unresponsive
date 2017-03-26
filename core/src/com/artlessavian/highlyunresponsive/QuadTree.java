@@ -128,10 +128,13 @@ public class QuadTree
 			PhysicsComponent pcOther = e.getComponent(PhysicsComponent.class);
 
 			if (e == entity) {continue;}
+			if (pc.isFriendly == pcOther.isFriendly) {continue;}
 
 			if (pc.pos.dst2(pcOther.pos) < (pc.radius + pcOther.radius) * (pc.radius + pcOther.radius))
 			{
 				collisions.add(e);
+				pc.hasCollided = true;
+				pcOther.hasCollided = true;
 				e.getComponent(SpriteComponent.class).sprite.setColor(Color.RED);
 			}
 		}

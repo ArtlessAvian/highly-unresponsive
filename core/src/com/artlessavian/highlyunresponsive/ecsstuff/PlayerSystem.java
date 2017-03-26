@@ -26,7 +26,7 @@ public class PlayerSystem extends IntervalIteratingSystem
 	public void processEntity(Entity e)
 	{
 		PhysicsComponent pc = e.getComponent(PhysicsComponent.class);
-//		ShootyComponent sc = e.getComponent(ShootyComponent.class);
+		ShootyComponent sc = e.getComponent(ShootyComponent.class);
 
 		if (pc.playerStrength != 0)
 		{
@@ -36,7 +36,6 @@ public class PlayerSystem extends IntervalIteratingSystem
 			if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {pc.playerVel.y = -pc.playerStrength;}
 			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {pc.playerVel.x = -pc.playerStrength;}
 			if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {pc.playerVel.x = pc.playerStrength;}
-//			if (Gdx.input.isKeyPressed(Input.Keys.Z) &&){}
 
 			if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {pc.playerVel.scl(1 / 2f);}
 		}

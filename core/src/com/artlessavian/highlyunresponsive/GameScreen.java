@@ -12,11 +12,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
+import java.util.HashSet;
+
 public class GameScreen implements Screen
 {
+
 	private Engine engine;
 	private GameMain gameMain;
 	private OrthographicCamera cam;
+
+	RenderingSystem renderingSys;
+	HashSet<Entity> toAdd;
+	HashSet<Entity> toRemove;
 	Rectangle gameBounds;
 	Entity player;
 
@@ -33,24 +40,21 @@ public class GameScreen implements Screen
 
 		gameBounds = new Rectangle(-720 / 2, 0, 720, 720);
 
-		engine.addSystem(new PlayerSystem(1 / 60f, gameBounds));
-		engine.addSystem(new PhysicsSystem(1 / 60f, gameBounds));
-		engine.addSystem(new CollisionSystem(engine, 1 / 60f, gameBounds));
-		engine.addSystem(new RenderingSystem(engine, gameMain.batch, 1 / 60f));
+		toAdd = new HashSet<Entity>();
+		toRemove = new HashSet<Entity>();
 
-		player = new Entity();
-		PhysicsComponent pc = new PhysicsComponent();
-		pc.playerStrength = 250;
-		pc.radius = 10;
-		pc.isPlayer = true;
-		player.add(pc);
-		SpriteComponent sc = new SpriteComponent();
-		sc.sprite = new Sprite(new Texture("circle.png"));
-		sc.sprite.setSize(20, 20);
-		sc.sprite.setColor(Color.GREEN);
-		player.add(sc);
-		player.add(new HurtboxComponent(true));
+		engine.addSystem(new AdditionSystem(engine, 1 / 60f, toAdd));
+		engine.addSystem(new PlayerSystem(1 / 60f, gameBounds));
+		engine.addSystem(new PhysicsSystem(1 / 60f, gameBounds, toRemove));
+		engine.addSystem(new CollisionSystem(engine, 1 / 60f, gameBounds));
+		renderingSys = new RenderingSystem(engine, gameMain.batch, 1/60f);
+		renderingSys.setProcessing(false);
+		engine.addSystem(renderingSys);
+
+		player = EntityFactory.makePlayer();
 		engine.addEntity(player);
+
+		engine.addEntity(EntityFactory.makeEnemy());
 	}
 
 	@Override
@@ -62,39 +66,12 @@ public class GameScreen implements Screen
 	@Override
 	public void render(float delta)
 	{
-		if (Gdx.graphics.getFrameId() % 5 == 0)
-		{
-			Entity test = new Entity();
-			PhysicsComponent pc = new PhysicsComponent();
-
-			float a = (float)(Math.sin(Gdx.graphics.getFrameId() / 4f) * 200);
-
-//			pc.pos.y = 700;
-//			pc.pos.x = a;
-//			pc.vel.set(0, -20);
-//			pc.vel.setAngle((float)(Math.sin(Gdx.graphics.getFrameId()/7f) * 45 + 270));
-			pc.pos.y = 700;
-			pc.pos.x = a;
-			pc.vel.set(player.getComponent(PhysicsComponent.class).pos);
-			pc.vel.sub(pc.pos);
-			pc.vel.setLength(150);
-
-			pc.radius = 10;
-			test.add(pc);
-			SpriteComponent sc = new SpriteComponent();
-			sc.sprite = new Sprite(new Texture("circle.png"));
-			sc.sprite.setSize(20, 20);
-			test.add(sc);
-			engine.addEntity(test);
-		}
-
+		engine.update(Math.min(1/60f, delta));
 
 		gameMain.batch.setProjectionMatrix(cam.combined);
-
 		gameMain.batch.begin();
-		engine.update(delta);
-
-
+		gameMain.font.draw(gameMain.batch, engine.getEntities().size() + "", -1280/2f, 400);
+		renderingSys.update(delta);
 //		for (int i = 0; i < 1000; i += 50)
 //		{
 //			gameMain.font.draw(gameMain.batch, i + "", 0, i);
@@ -103,7 +80,6 @@ public class GameScreen implements Screen
 //		{
 //			gameMain.font.draw(gameMain.batch, i + "", i, 0);
 //		}
-
 		gameMain.batch.end();
 	}
 

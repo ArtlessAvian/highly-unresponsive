@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,6 +20,7 @@ public class RenderingSystem extends EntitySystem
 	ImmutableArray<Entity> entities;
 	private boolean doInterpolation = true;
 	Sprite ui;
+	Sprite circle;
 
 	public RenderingSystem(Engine engine, SpriteBatch batch, float interval)
 	{
@@ -27,6 +30,8 @@ public class RenderingSystem extends EntitySystem
 
 		ui = new Sprite(new Texture("Stuff.png"));
 		ui.setCenter(0, 360);
+
+		circle = new Sprite(new Texture("circle.png"));
 	}
 
 	@Override
@@ -45,8 +50,14 @@ public class RenderingSystem extends EntitySystem
 				sc.sprite.setCenterY(pc.pos.y + pc.vel.y * rollover);
 			}
 
-			//sc.sprite.setColor(pc.quadtreePos.c);
+//			sc.sprite.setColor(pc.quadtreePos.c);
 			sc.sprite.draw(batch);
+			if (pc != null)
+			{
+				circle.setSize(pc.radius * 2, pc.radius * 2);
+				circle.setCenter(sc.sprite.getX() + sc.sprite.getWidth()/2f, sc.sprite.getY() + sc.sprite.getHeight()/2f);
+				circle.draw(batch, (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) ? 0.3f : 0);
+			}
 		}
 
 //		System.out.println("rendering");
