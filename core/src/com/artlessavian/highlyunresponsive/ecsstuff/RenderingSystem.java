@@ -58,7 +58,7 @@ public class RenderingSystem extends EntitySystem
 			if (pc != null)
 			{
 				circle.setSize(pc.radius * 2, pc.radius * 2);
-				circle.setCenter(sc.sprite.getX() + sc.sprite.getWidth()/2f, sc.sprite.getY() + sc.sprite.getHeight()/2f);
+				circle.setCenter(sc.sprite.getX() + sc.sprite.getWidth() / 2f, sc.sprite.getY() + sc.sprite.getHeight() / 2f);
 				circle.draw(batch, (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) ? 0.3f : 0);
 			}
 

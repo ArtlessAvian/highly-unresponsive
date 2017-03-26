@@ -1,15 +1,15 @@
 package com.artlessavian.highlyunresponsive.ecsstuff;
 
 import com.artlessavian.highlyunresponsive.GameMain;
-//import com.artlessavian.highlyunresponsive.QuadTree;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IntervalSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.math.Rectangle;
 
 import java.util.HashSet;
+
+//import com.artlessavian.highlyunresponsive.QuadTree;
 
 public class LameCollisionSystem extends IntervalSystem
 {

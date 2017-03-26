@@ -1,10 +1,12 @@
 package com.artlessavian.highlyunresponsive;
 
 
-import com.artlessavian.highlyunresponsive.ecsstuff.*;
+import com.artlessavian.highlyunresponsive.ecsstuff.HurtboxComponent;
+import com.artlessavian.highlyunresponsive.ecsstuff.PhysicsComponent;
+import com.artlessavian.highlyunresponsive.ecsstuff.ShootyComponent;
+import com.artlessavian.highlyunresponsive.ecsstuff.SpriteComponent;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -78,7 +80,7 @@ public class EntityFactory
 			@Override
 			public void createBullets(HashSet<Entity> toAdd, Entity e)
 			{
-				if (Gdx.graphics.getFrameId() % 1 == 0)
+				if (Gdx.graphics.getFrameId() % 3 == 0)
 				{
 					toAdd.add(EntityFactory.makeBulletTracking(false, pc.pos, player.getComponent(PhysicsComponent.class).pos));
 				}

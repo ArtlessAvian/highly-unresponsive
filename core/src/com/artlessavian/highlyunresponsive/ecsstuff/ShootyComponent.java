@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Entity;
 
 import java.util.HashSet;
 
-
 public class ShootyComponent implements Component
 {
 	public interface BulletPattern

@@ -1,24 +1,19 @@
 package com.artlessavian.highlyunresponsive.ecsstuff;
 
-import com.artlessavian.highlyunresponsive.EntityFactory;
-//import com.artlessavian.highlyunresponsive.QuadTree;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IntervalIteratingSystem;
 import com.badlogic.ashley.systems.IntervalSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 
 import java.util.HashSet;
+
+//import com.artlessavian.highlyunresponsive.QuadTree;
 
 public class RemovalsSystem extends IntervalSystem
 {
 	private final float interval;
 	private HashSet<Entity> toRemove;
-//	private QuadTree.QuadTreeRoot quadtree;
+	//	private QuadTree.QuadTreeRoot quadtree;
 	ImmutableArray<Entity> entities;
 	private Engine engine;
 

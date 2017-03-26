@@ -23,7 +23,7 @@ public class GameScreen implements Screen
 	HashSet<Entity> toAdd;
 	HashSet<Entity> toRemove;
 	Rectangle gameBounds;
-//	QuadTree.QuadTreeRoot quadtree;
+	//	QuadTree.QuadTreeRoot quadtree;
 	Entity player;
 
 	public GameScreen(GameMain gameMain)
@@ -50,7 +50,7 @@ public class GameScreen implements Screen
 		engine.addSystem(new PhysicsSystem(1 / 60f, gameBounds, toRemove));
 //		engine.addSystem(new CollisionSystem(engine, 1 / 60f, gameBounds, toRemove, quadtree, gameMain));
 		engine.addSystem(new LameCollisionSystem(engine, 1 / 60f, toRemove, gameMain));
-		renderingSys = new RenderingSystem(engine, gameMain.batch, gameMain.font, 1/60f);
+		renderingSys = new RenderingSystem(engine, gameMain.batch, gameMain.font, 1 / 60f);
 		renderingSys.setProcessing(false);
 		engine.addSystem(renderingSys);
 
@@ -76,10 +76,10 @@ public class GameScreen implements Screen
 
 		gameMain.batch.setProjectionMatrix(cam.combined);
 		gameMain.batch.begin();
-		engine.update(Math.min(1/60f, delta));
+		engine.update(Math.min(1 / 60f, delta));
 		renderingSys.update(delta);
 
-		gameMain.font.draw(gameMain.batch, engine.getEntities().size() + "", -1280/2f, 400);
+		gameMain.font.draw(gameMain.batch, engine.getEntities().size() + "", -1280 / 2f, 400);
 		for (int i = 0; i < 1000; i += 50)
 		{
 			gameMain.font.draw(gameMain.batch, i + "", 0, i);
