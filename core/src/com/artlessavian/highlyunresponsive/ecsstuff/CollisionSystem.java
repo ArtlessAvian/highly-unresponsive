@@ -20,16 +20,18 @@ public class CollisionSystem extends IntervalSystem
 	private GameMain gameMain;
 	private Rectangle gameBounds;
 	HashSet<Entity> collisions;
+	HashSet<Entity> toRemove;
 
-	public CollisionSystem(Engine engine, float interval, Rectangle gameBounds)
+	public CollisionSystem(Engine engine, float interval, Rectangle gameBounds, HashSet<Entity> toRemove, QuadTree.QuadTreeRoot quadtree, GameMain gameMain)
 	{
 		super(interval);
 		this.gameBounds = gameBounds;
-//		this.gameMain = gameMain;
+		this.gameMain = gameMain;
 		entities = engine.getEntitiesFor(Family.all(PhysicsComponent.class).get());
 		withHurtboxes = engine.getEntitiesFor(Family.all(HurtboxComponent.class).get());
-		quadtree = new QuadTree.QuadTreeRoot(gameBounds.x, gameBounds.y, gameBounds.width, gameBounds.height);
+		this.quadtree = quadtree;
 		collisions = new HashSet<Entity>();
+		this.toRemove = toRemove;
 	}
 
 	@Override
@@ -46,6 +48,12 @@ public class CollisionSystem extends IntervalSystem
 				PhysicsComponent pc = e.getComponent(PhysicsComponent.class);
 				pc.quadtreePos.recheckEntity(e);
 			}
+
+			PhysicsComponent pc = e.getComponent(PhysicsComponent.class);
+			if (!pc.quadtreePos.inBounds.contains(e))
+			{
+				System.out.println("what");
+			}
 		}
 
 		for (Entity e : withHurtboxes)
@@ -53,10 +61,20 @@ public class CollisionSystem extends IntervalSystem
 			PhysicsComponent pc = e.getComponent(PhysicsComponent.class);
 			collisions.clear();
 			pc.quadtreePos.getCollisions(e, collisions);
-			if (collisions.size() != 0)
-			{ System.out.println(collisions.size()); }
+			HurtboxComponent hc = e.getComponent(HurtboxComponent.class);
+			if (!collisions.isEmpty()) System.out.println(collisions.size());
+			for (Entity collider : collisions)
+			{
+				hc.health -= collider.getComponent(PhysicsComponent.class).damage;
+				toRemove.add(collider);
+			}
+			if (hc.health <= 0)
+			{
+				toRemove.add(e);
+				break;
+			}
 		}
 
-		//quadtree.draw(gameMain.font, gameMain.batch);
+		quadtree.draw(gameMain.font, gameMain.batch);
 	}
 }

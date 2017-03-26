@@ -23,6 +23,7 @@ public class EntityFactory
 		pc.vel.sub(pc.pos);
 		pc.vel.setLength(150);
 		pc.radius = 10;
+		pc.damage = 1;
 		pc.isFriendly = isFriendly;
 		e.add(pc);
 		SpriteComponent sc = new SpriteComponent();
@@ -39,9 +40,10 @@ public class EntityFactory
 
 		PhysicsComponent pc = new PhysicsComponent();
 		pc.pos.set(source);
-		pc.vel.y = 700;
+		pc.vel.y = 300;
 		pc.radius = 10;
 		pc.isFriendly = isFriendly;
+		pc.damage = 1;
 		e.add(pc);
 		SpriteComponent sc = new SpriteComponent();
 		sc.sprite = new Sprite(new Texture("circle.png"));
@@ -58,6 +60,7 @@ public class EntityFactory
 		final PhysicsComponent pc = new PhysicsComponent();
 		pc.radius = 50;
 		pc.pos.y = 500;
+		pc.pos.x = -60;
 		pc.isFriendly = false;
 		e.add(pc);
 		SpriteComponent sc = new SpriteComponent();
@@ -65,7 +68,9 @@ public class EntityFactory
 		sc.sprite.setSize(100, 100);
 //		sc.sprite.setColor(Color.GREEN);
 		e.add(sc);
-		e.add(new HurtboxComponent(false));
+		HurtboxComponent hc = new HurtboxComponent(false);
+		hc.health = 300;
+		e.add(hc);
 
 		ShootyComponent shootC = new ShootyComponent();
 		shootC.pattern = new ShootyComponent.BulletPattern()
@@ -73,19 +78,19 @@ public class EntityFactory
 			@Override
 			public void createBullets(HashSet<Entity> toAdd, Entity e)
 			{
-				if (Gdx.graphics.getFrameId() % 7 == 0)
+				if (Gdx.graphics.getFrameId() % 1 == 0)
 				{
 					toAdd.add(EntityFactory.makeBulletTracking(false, pc.pos, player.getComponent(PhysicsComponent.class).pos));
 				}
 			}
 		};
-		e.add(shootC);
+		//e.add(shootC);
 
-		ScriptComponent scriptC = new ScriptComponent();
-		float[] xs = {0, 0, 0, 0, 0, 0};
-		float[] ys = {0, 100, 100, 0, 0, 0};
-		scriptC.script = new ScriptComponent.ScriptFollowPath(xs, ys);
-		e.add(scriptC);
+//		ScriptComponent scriptC = new ScriptComponent();
+//		float[] xs = {0, 0, 0, 0, 0, 0};
+//		float[] ys = {0, 100, 100, 0, 0, 0};
+//		scriptC.script = new ScriptComponent.ScriptFollowPath(xs, ys);
+//		e.add(scriptC);
 
 		return e;
 	}
@@ -115,11 +120,11 @@ public class EntityFactory
 			@Override
 			public void createBullets(HashSet<Entity> toAdd, Entity e)
 			{
-				if (Gdx.graphics.getFrameId() % 4 == 0)
-				{
-					toAdd.add(EntityFactory.makeBullet(true, pc.pos));
-				}
-				if (Gdx.graphics.getFrameId() % 10 == 0)
+//				if (Gdx.graphics.getFrameId() % 4 == 0)
+//				{
+//					toAdd.add(EntityFactory.makeBullet(true, pc.pos));
+//				}
+				if (Gdx.graphics.getFrameId() % 1 == 0)
 				{
 					toAdd.add(EntityFactory.makeBullet(true, pc.pos));
 				}

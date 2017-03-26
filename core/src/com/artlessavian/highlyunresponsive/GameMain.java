@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameMain extends Game
 {
-	SpriteBatch batch;
+	public SpriteBatch batch;
 	//	AssetManager assets;
-	BitmapFont font;
+	public BitmapFont font;
 	private boolean started;
 
 	@Override

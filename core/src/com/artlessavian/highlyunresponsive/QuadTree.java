@@ -4,6 +4,9 @@ import com.artlessavian.highlyunresponsive.ecsstuff.PhysicsComponent;
 import com.artlessavian.highlyunresponsive.ecsstuff.SpriteComponent;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.HashSet;
@@ -14,7 +17,7 @@ public class QuadTree
 
 	public static class QuadTreeRoot extends QuadTree
 	{
-		HashSet<Entity> all;
+		public HashSet<Entity> all;
 
 		public QuadTreeRoot(float x, float y, float width, float height)
 		{
@@ -36,7 +39,7 @@ public class QuadTree
 
 	QuadTree parent;
 	QuadTree[] children;
-	HashSet<Entity> inBounds;
+	public HashSet<Entity> inBounds;
 	Rectangle r;
 
 	private QuadTree(QuadTree parent, float x, float y, float width, float height)
@@ -79,7 +82,7 @@ public class QuadTree
 	{
 		if (children == null)
 		{
-			if (inBounds.size() < 2)
+			if (inBounds.size() < 20)
 			{
 				PhysicsComponent pc = entity.getComponent(PhysicsComponent.class);
 				pc.quadtreePos = this;
@@ -120,6 +123,15 @@ public class QuadTree
 		}
 	}
 
+	public void removeEntity(Entity e)
+	{
+		if (!inBounds.remove(e) && parent != null)
+		{
+			System.out.println("hm");
+			parent.removeEntity(e);
+		}
+	}
+
 	public void getCollisions(Entity entity, HashSet<Entity> collisions)
 	{
 		PhysicsComponent pc = entity.getComponent(PhysicsComponent.class);
@@ -133,8 +145,6 @@ public class QuadTree
 			if (pc.pos.dst2(pcOther.pos) < (pc.radius + pcOther.radius) * (pc.radius + pcOther.radius))
 			{
 				collisions.add(e);
-				pc.hasCollided = true;
-				pcOther.hasCollided = true;
 				e.getComponent(SpriteComponent.class).sprite.setColor(Color.RED);
 			}
 		}
@@ -145,20 +155,22 @@ public class QuadTree
 		}
 	}
 
-//	Texture tex = new Texture("square.png");
-//	public Color c = new Color((float)Math.random(), (float)Math.random(), (float)Math.random(), 1);
-//
-//	public void draw(BitmapFont font, SpriteBatch batch)
-//	{
-//		batch.setColor(c);
-//		batch.draw(tex, bounds.x, bounds.y, bounds.width, bounds.height);
-//		font.draw(batch, inBounds.size() + "", bounds.x + 30, bounds.y + 30);
-//		if (children != null)
-//		{
-//			for (QuadTree q : children)
-//			{
-//				q.draw(font, batch);
-//			}
-//		}
-//	}
+	//Texture tex = new Texture("Circle.png");
+	//public Color c = new Color((float)Math.random(), (float)Math.random(), (float)Math.random(), 0.9f);
+
+	public void draw(BitmapFont font, SpriteBatch batch)
+	{
+		for (Entity e : inBounds)
+		{
+			PhysicsComponent pc = e.getComponent(PhysicsComponent.class);
+			font.draw(batch, "^", pc.pos.x, pc.pos.y);
+		}
+		if (children != null)
+		{
+			for (QuadTree q : children)
+			{
+				q.draw(font, batch);
+			}
+		}
+	}
 }

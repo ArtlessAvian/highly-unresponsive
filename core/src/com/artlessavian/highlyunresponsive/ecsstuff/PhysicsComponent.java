@@ -15,6 +15,7 @@ public class PhysicsComponent implements Component
 	public QuadTree quadtreePos;
 	public boolean hasCollided;
 	public boolean isFriendly;
+	public int damage;
 	public int despawn = 0;
 
 	public PhysicsComponent()

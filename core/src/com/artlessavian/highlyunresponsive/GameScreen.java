@@ -4,6 +4,8 @@ import com.artlessavian.highlyunresponsive.ecsstuff.*;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
@@ -21,6 +23,7 @@ public class GameScreen implements Screen
 	HashSet<Entity> toAdd;
 	HashSet<Entity> toRemove;
 	Rectangle gameBounds;
+	QuadTree.QuadTreeRoot quadtree;
 	Entity player;
 
 	public GameScreen(GameMain gameMain)
@@ -38,13 +41,15 @@ public class GameScreen implements Screen
 
 		toAdd = new HashSet<Entity>();
 		toRemove = new HashSet<Entity>();
+		quadtree = new QuadTree.QuadTreeRoot(gameBounds.x, gameBounds.y, gameBounds.width, gameBounds.height);
 
+		engine.addSystem(new RemovalsSystem(engine, 1 / 60f, toRemove, quadtree));
 		engine.addSystem(new AdditionSystem(engine, 1 / 60f, toAdd));
 		engine.addSystem(new PlayerSystem(1 / 60f, gameBounds));
 		engine.addSystem(new ScriptSystem(1 / 60f));
 		engine.addSystem(new PhysicsSystem(1 / 60f, gameBounds, toRemove));
-		engine.addSystem(new CollisionSystem(engine, 1 / 60f, gameBounds));
-		renderingSys = new RenderingSystem(engine, gameMain.batch, 1/60f);
+		engine.addSystem(new CollisionSystem(engine, 1 / 60f, gameBounds, toRemove, quadtree, gameMain));
+		renderingSys = new RenderingSystem(engine, gameMain.batch, gameMain.font, 1/60f);
 		renderingSys.setProcessing(false);
 		engine.addSystem(renderingSys);
 
@@ -63,12 +68,17 @@ public class GameScreen implements Screen
 	@Override
 	public void render(float delta)
 	{
-		engine.update(Math.min(1/60f, delta));
+		if (Gdx.input.isKeyJustPressed(Input.Keys.S))
+		{
+			engine.addEntity(EntityFactory.makeEnemy());
+		}
 
 		gameMain.batch.setProjectionMatrix(cam.combined);
 		gameMain.batch.begin();
-		gameMain.font.draw(gameMain.batch, engine.getEntities().size() + "", -1280/2f, 400);
+		engine.update(Math.min(1/60f, delta));
 		renderingSys.update(delta);
+
+		gameMain.font.draw(gameMain.batch, engine.getEntities().size() + "", -1280/2f, 400);
 		for (int i = 0; i < 1000; i += 50)
 		{
 			gameMain.font.draw(gameMain.batch, i + "", 0, i);

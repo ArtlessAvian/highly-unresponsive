@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Component;
 public class HurtboxComponent implements Component
 {
 	int maxHealth = 1;
-	int health = 1;
+	public int health = 1;
 	boolean isBoss;
 	boolean isFriendly;
 

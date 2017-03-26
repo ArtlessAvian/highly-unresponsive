@@ -53,11 +53,11 @@ public class PhysicsSystem extends IntervalIteratingSystem
 		}
 		else
 		{
-			if (gameBounds.contains(pc.pos))
+			if (!gameBounds.contains(pc.pos))
 			{
 				pc.despawn++;
 			}
-			if (pc.despawn > 300)
+			if (pc.despawn > 3)
 			{
 				toRemove.add(entity);
 			}
