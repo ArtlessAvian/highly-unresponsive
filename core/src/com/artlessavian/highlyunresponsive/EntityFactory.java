@@ -60,7 +60,7 @@ public class EntityFactory
 		final PhysicsComponent pc = new PhysicsComponent();
 		pc.radius = 50;
 		pc.pos.y = 500;
-		pc.pos.x = -60;
+		pc.pos.x = -250;
 		pc.isFriendly = false;
 		e.add(pc);
 		SpriteComponent sc = new SpriteComponent();

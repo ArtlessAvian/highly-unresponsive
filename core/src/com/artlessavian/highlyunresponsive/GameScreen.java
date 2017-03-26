@@ -23,7 +23,7 @@ public class GameScreen implements Screen
 	HashSet<Entity> toAdd;
 	HashSet<Entity> toRemove;
 	Rectangle gameBounds;
-	QuadTree.QuadTreeRoot quadtree;
+//	QuadTree.QuadTreeRoot quadtree;
 	Entity player;
 
 	public GameScreen(GameMain gameMain)
@@ -41,14 +41,15 @@ public class GameScreen implements Screen
 
 		toAdd = new HashSet<Entity>();
 		toRemove = new HashSet<Entity>();
-		quadtree = new QuadTree.QuadTreeRoot(gameBounds.x, gameBounds.y, gameBounds.width, gameBounds.height);
+//		quadtree = new QuadTree.QuadTreeRoot(gameBounds.x, gameBounds.y, gameBounds.width, gameBounds.height);
 
-		engine.addSystem(new RemovalsSystem(engine, 1 / 60f, toRemove, quadtree));
+		engine.addSystem(new RemovalsSystem(engine, 1 / 60f, toRemove));
 		engine.addSystem(new AdditionSystem(engine, 1 / 60f, toAdd));
 		engine.addSystem(new PlayerSystem(1 / 60f, gameBounds));
 		engine.addSystem(new ScriptSystem(1 / 60f));
 		engine.addSystem(new PhysicsSystem(1 / 60f, gameBounds, toRemove));
-		engine.addSystem(new CollisionSystem(engine, 1 / 60f, gameBounds, toRemove, quadtree, gameMain));
+//		engine.addSystem(new CollisionSystem(engine, 1 / 60f, gameBounds, toRemove, quadtree, gameMain));
+		engine.addSystem(new LameCollisionSystem(engine, 1 / 60f, toRemove, gameMain));
 		renderingSys = new RenderingSystem(engine, gameMain.batch, gameMain.font, 1/60f);
 		renderingSys.setProcessing(false);
 		engine.addSystem(renderingSys);
