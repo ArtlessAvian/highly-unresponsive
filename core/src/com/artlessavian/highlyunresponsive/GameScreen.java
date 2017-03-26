@@ -4,12 +4,8 @@ import com.artlessavian.highlyunresponsive.ecsstuff.*;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.HashSet;
@@ -45,6 +41,7 @@ public class GameScreen implements Screen
 
 		engine.addSystem(new AdditionSystem(engine, 1 / 60f, toAdd));
 		engine.addSystem(new PlayerSystem(1 / 60f, gameBounds));
+		engine.addSystem(new ScriptSystem(1 / 60f));
 		engine.addSystem(new PhysicsSystem(1 / 60f, gameBounds, toRemove));
 		engine.addSystem(new CollisionSystem(engine, 1 / 60f, gameBounds));
 		renderingSys = new RenderingSystem(engine, gameMain.batch, 1/60f);
@@ -72,14 +69,14 @@ public class GameScreen implements Screen
 		gameMain.batch.begin();
 		gameMain.font.draw(gameMain.batch, engine.getEntities().size() + "", -1280/2f, 400);
 		renderingSys.update(delta);
-//		for (int i = 0; i < 1000; i += 50)
-//		{
-//			gameMain.font.draw(gameMain.batch, i + "", 0, i);
-//		}
-//		for (int i = 0; i < 1000; i += 50)
-//		{
-//			gameMain.font.draw(gameMain.batch, i + "", i, 0);
-//		}
+		for (int i = 0; i < 1000; i += 50)
+		{
+			gameMain.font.draw(gameMain.batch, i + "", 0, i);
+		}
+		for (int i = 0; i < 1000; i += 50)
+		{
+			gameMain.font.draw(gameMain.batch, i + "", i, 0);
+		}
 		gameMain.batch.end();
 	}
 

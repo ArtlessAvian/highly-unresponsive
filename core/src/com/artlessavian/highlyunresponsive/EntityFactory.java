@@ -1,10 +1,7 @@
 package com.artlessavian.highlyunresponsive;
 
 
-import com.artlessavian.highlyunresponsive.ecsstuff.HurtboxComponent;
-import com.artlessavian.highlyunresponsive.ecsstuff.PhysicsComponent;
-import com.artlessavian.highlyunresponsive.ecsstuff.ShootyComponent;
-import com.artlessavian.highlyunresponsive.ecsstuff.SpriteComponent;
+import com.artlessavian.highlyunresponsive.ecsstuff.*;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -54,24 +51,6 @@ public class EntityFactory
 		return e;
 	}
 
-	public static Entity makeBullet(boolean isFriendly)
-	{
-		Entity e = new Entity();
-
-		PhysicsComponent pc = new PhysicsComponent();
-		pc.pos.y = 720;
-		pc.vel.y = -50;
-		pc.radius = 10;
-		pc.isFriendly = isFriendly;
-		e.add(pc);
-		SpriteComponent sc = new SpriteComponent();
-		sc.sprite = new Sprite(new Texture("circle.png"));
-		sc.sprite.setSize(20, 20);
-		e.add(sc);
-
-		return e;
-	}
-
 	public static Entity makeEnemy()
 	{
 		Entity e = new Entity();
@@ -92,7 +71,7 @@ public class EntityFactory
 		shootC.pattern = new ShootyComponent.BulletPattern()
 		{
 			@Override
-			public void createBullets(HashSet<Entity> toAdd)
+			public void createBullets(HashSet<Entity> toAdd, Entity e)
 			{
 				if (Gdx.graphics.getFrameId() % 7 == 0)
 				{
@@ -101,6 +80,12 @@ public class EntityFactory
 			}
 		};
 		e.add(shootC);
+
+		ScriptComponent scriptC = new ScriptComponent();
+		float[] xs = {0, 0, 0, 0, 0, 0};
+		float[] ys = {0, 100, 100, 0, 0, 0};
+		scriptC.script = new ScriptComponent.ScriptFollowPath(xs, ys);
+		e.add(scriptC);
 
 		return e;
 	}
@@ -128,9 +113,13 @@ public class EntityFactory
 		shootC.pattern = new ShootyComponent.BulletPattern()
 		{
 			@Override
-			public void createBullets(HashSet<Entity> toAdd)
+			public void createBullets(HashSet<Entity> toAdd, Entity e)
 			{
 				if (Gdx.graphics.getFrameId() % 4 == 0)
+				{
+					toAdd.add(EntityFactory.makeBullet(true, pc.pos));
+				}
+				if (Gdx.graphics.getFrameId() % 10 == 0)
 				{
 					toAdd.add(EntityFactory.makeBullet(true, pc.pos));
 				}

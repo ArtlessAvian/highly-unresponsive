@@ -36,7 +36,7 @@ public class AdditionSystem extends IntervalSystem
 			ShootyComponent sc = e.getComponent(ShootyComponent.class);
 			if (!sc.isPlayer || Gdx.input.isKeyPressed(Input.Keys.Z))
 			{
-				sc.pattern.createBullets(toAdd);
+				sc.pattern.createBullets(toAdd, e);
 			}
 		}
 

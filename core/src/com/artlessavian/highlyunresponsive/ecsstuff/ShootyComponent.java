@@ -10,9 +10,10 @@ public class ShootyComponent implements Component
 {
 	public interface BulletPattern
 	{
-		void createBullets(HashSet<Entity> toAdd);
+		void createBullets(HashSet<Entity> toAdd, Entity entity);
 	}
 
 	public boolean isPlayer;
+	public boolean isActive;
 	public BulletPattern pattern;
 }
